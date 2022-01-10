@@ -96,6 +96,7 @@
 - [#5138](https://github.com/blockscout/blockscout/pull/5138) - Webpack minor update
 - [#5119](https://github.com/blockscout/blockscout/pull/5119) - Inventory controller refactoring
 - [#5118](https://github.com/blockscout/blockscout/pull/5118) - Fix top navigation template
+- [#5082](https://github.com/blockscout/blockscout/pull/5082) - Elixir 1.12 -> 1.13
 
 
 ## 4.1.1-beta
