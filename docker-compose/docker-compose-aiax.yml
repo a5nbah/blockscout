@@ -13,7 +13,7 @@ services:
       - ./pgdata:/var/lib/postgresql/data
 
   blockscout:
-    image: blockscout/blockscout:${DOCKER_TAG:-latest}
+    image: aiax-blockscout
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
