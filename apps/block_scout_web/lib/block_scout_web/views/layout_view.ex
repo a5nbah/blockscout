@@ -8,31 +8,7 @@ defmodule BlockScoutWeb.LayoutView do
   import BlockScoutWeb.AddressView, only: [from_address_hash: 1]
 
   @issue_url "https://github.com/blockscout/blockscout/issues/new"
-  @default_other_networks [
-    %{
-      title: "POA",
-      url: "https://blockscout.com/poa/core"
-    },
-    %{
-      title: "Sokol",
-      url: "https://blockscout.com/poa/sokol",
-      test_net?: true
-    },
-    %{
-      title: "Gnosis Chain",
-      url: "https://blockscout.com/xdai/mainnet"
-    },
-    %{
-      title: "Ethereum Classic",
-      url: "https://blockscout.com/etc/mainnet",
-      other?: true
-    },
-    %{
-      title: "RSK",
-      url: "https://blockscout.com/rsk/mainnet",
-      other?: true
-    }
-  ]
+  @default_other_networks []
 
   alias BlockScoutWeb.SocialMedia
 
