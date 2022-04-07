@@ -60,7 +60,8 @@ defmodule BlockScoutWeb.WeiHelpers do
 
     formatted_value =
       if Decimal.cmp(converted_value, 1_000_000_000_000) == :gt do
-        CldrHelper.Number.to_string!(converted_value, format: "0.###E+0")
+        exp_round(converted_value, 10000)
+        |> CldrHelper.Number.to_string!(format: "0.###E+0")
       else
         CldrHelper.Number.to_string!(converted_value, format: "#,##0.##################")
       end
@@ -76,4 +77,14 @@ defmodule BlockScoutWeb.WeiHelpers do
   defp display_unit(:wei), do: gettext("Wei")
   defp display_unit(:gwei), do: gettext("Gwei")
   defp display_unit(:ether), do: gettext("Ether")
+
+  defp exp_round(number, precision, mult \\ 1) do
+    if Decimal.cmp(number, precision) == :lt do
+      Decimal.round(number)
+      |> Decimal.mult(mult)
+    else
+      Decimal.div(number, 10)
+      |> exp_round(precision, Decimal.mult(10, mult))
+    end
+  end
 end
