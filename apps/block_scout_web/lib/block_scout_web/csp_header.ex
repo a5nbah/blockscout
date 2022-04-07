@@ -24,7 +24,18 @@ defmodule BlockScoutWeb.CSPHeader do
   end
 
   defp websocket_endpoints(conn) do
-    host = Conn.get_req_header(conn, "host")
-    "ws://#{host} wss://#{host}"
+    url_params = Application.get_env(:block_scout_web, BlockScoutWeb.Endpoint)[:url]
+    host = url_params[:host]
+
+    if host != "localhost" do
+      case Keyword.get(url_params, :scheme) do
+        "https" -> "wss://#{host}"
+        "http" -> "ws://#{host}"
+        _ -> ""
+      end
+    else
+      host = Conn.get_req_header(conn, "host")
+      "ws://#{host} wss://#{host}"
+    end
   end
 end
