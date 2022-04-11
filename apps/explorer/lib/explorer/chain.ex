@@ -2530,8 +2530,18 @@ defmodule Explorer.Chain do
     query =
       from(
         token_transfer in TokenTransfer,
-        where: token_transfer.to_address_hash == ^address.hash,
-        or_where: token_transfer.from_address_hash == ^address.hash
+        where: token_transfer.from_address_hash == ^address.hash
+      )
+
+    Repo.aggregate(query, :count, timeout: :infinity)
+  end
+
+  @spec address_to_token_incoming_transfer_count(Address.t()) :: non_neg_integer()
+  def address_to_token_incoming_transfer_count(address) do
+    query =
+      from(
+        token_transfer in TokenTransfer,
+        where: token_transfer.to_address_hash == ^address.hash
       )
 
     Repo.aggregate(query, :count, timeout: :infinity)

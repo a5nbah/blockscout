@@ -24,7 +24,9 @@ export const initialState = {
   balanceCard: null,
   fetchedCoinBalanceBlockNumber: null,
   transactionCount: null,
+  incomingTransactionCount: null,
   tokenTransferCount: null,
+  tokenIncomingTransferCount: null,
   gasUsageCount: null,
   validationCount: null,
   countersFetched: false
@@ -46,7 +48,9 @@ export function reducer (state = initialState, action) {
     case 'COUNTERS_FETCHED': {
       return Object.assign({}, state, {
         transactionCount: action.transactionCount,
+        incomingTransactionCount: action.incomingTransactionCount,
         tokenTransferCount: action.tokenTransferCount,
+        tokenIncomingTransferCount: action.tokenIncomingTransferCount,
         gasUsageCount: action.gasUsageCount,
         validationCount: action.validationCount,
         crcTotalWorth: action.crcTotalWorth,
@@ -63,15 +67,17 @@ export function reducer (state = initialState, action) {
       if (state.channelDisconnected) return state
 
       const transactionCount = (action.msg.fromAddressHash === state.addressHash) ? state.transactionCount + 1 : state.transactionCount
+      const incomingTransactionCount = (action.msg.fromAddressHash === state.addressHash) ? state.incomingTransactionCount : state.incomingTransactionCount + 1
 
-      return Object.assign({}, state, { transactionCount })
+      return Object.assign({}, state, { transactionCount, incomingTransactionCount })
     }
     case 'RECEIVED_NEW_TOKEN_TRANSFER': {
       if (state.channelDisconnected) return state
 
       const tokenTransferCount = (action.msg.fromAddressHash === state.addressHash) ? state.tokenTransferCount + 1 : state.tokenTransferCount
+      const tokenIncomingTransferCount = (action.msg.fromAddressHash === state.addressHash) ? state.tokenIncomingTransferCount : state.tokenIncomingTransferCount + 1
 
-      return Object.assign({}, state, { tokenTransferCount })
+      return Object.assign({}, state, { tokenTransferCount, tokenIncomingTransferCount })
     }
     case 'RECEIVED_UPDATED_BALANCE': {
       return Object.assign({}, state, {
@@ -124,6 +130,18 @@ const elements = {
       }
     }
   },
+  '[data-selector="incoming-transaction-count"]': {
+    load ($el) {
+      return { incomingTransactionCount: numeral($el.text()).value() }
+    },
+    render ($el, state, oldState) {
+      if (state.countersFetched) {
+        if (oldState.incomingTransactionCount === state.incomingTransactionCount) return
+        const transactionsDSName = (state.incomingTransactionCount === 1) ? ' Incoming transaction' : ' Incoming transactions'
+        $el.empty().append(numeral(state.incomingTransactionCount).format() + transactionsDSName)
+      }
+    }
+  },
   '[data-selector="transfer-count"]': {
     load ($el) {
       return { tokenTransferCount: numeral($el.text()).value() }
@@ -133,6 +151,18 @@ const elements = {
         if (oldState.tokenTransferCount === state.tokenTransferCount) return
         const transfersDSName = (state.tokenTransferCount === 1) ? ' Transfer' : ' Transfers'
         $el.empty().append(numeral(state.tokenTransferCount).format() + transfersDSName)
+      }
+    }
+  },
+  '[data-selector="incoming-transfer-count"]': {
+    load ($el) {
+      return { tokenIncomingTransferCount: numeral($el.text()).value() }
+    },
+    render ($el, state, oldState) {
+      if (state.countersFetched) {
+        if (oldState.tokenIncomingTransferCount === state.tokenIncomingTransferCount) return
+        const transfersDSName = (state.tokenIncomingTransferCount === 1) ? ' Incoming transfer' : ' Incoming transfers'
+        $el.empty().append(numeral(state.tokenIncomingTransferCount).format() + transfersDSName)
       }
     }
   },

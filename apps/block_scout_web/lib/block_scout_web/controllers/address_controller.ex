@@ -4,7 +4,7 @@ defmodule BlockScoutWeb.AddressController do
   import BlockScoutWeb.Chain, only: [paging_options: 1, next_page_params: 3, split_list_by_page: 1]
 
   alias BlockScoutWeb.{AccessHelpers, AddressView, Controller, CurrencyHelpers}
-  alias Explorer.Counters.{AddressTokenTransfersCounter, AddressTransactionsCounter, AddressTransactionsGasUsageCounter}
+  alias Explorer.Counters.{AddressTokenTransfersCounter, AddressTokenIncomingTransfersCounter, AddressTransactionsCounter, AddressIncomingTransactionsCounter, AddressTransactionsGasUsageCounter}
   alias Explorer.{Chain, CustomContractsHelpers, Market}
   alias Explorer.ExchangeRates.Token
   alias Phoenix.View
@@ -87,12 +87,16 @@ defmodule BlockScoutWeb.AddressController do
       {validation_count, crc_total_worth} = address_counters(address)
 
       transactions_from_db = address.transactions_count || 0
+      incoming_transactions_from_db = address.incoming_transactions_count || 0
       token_transfers_from_db = address.token_transfers_count || 0
+      token_incoming_transfers_from_db = address.token_incoming_transfers_count || 0
       address_gas_usage_from_db = address.gas_used || 0
 
       json(conn, %{
         transaction_count: transactions_from_db,
+        incoming_transaction_count: incoming_transactions_from_db,
         token_transfer_count: token_transfers_from_db,
+        token_incoming_transfer_count: token_incoming_transfers_from_db,
         gas_usage_count: address_gas_usage_from_db,
         validation_count: validation_count,
         crc_total_worth: crc_total_worth
@@ -101,7 +105,9 @@ defmodule BlockScoutWeb.AddressController do
       _ ->
         json(conn, %{
           transaction_count: 0,
+          incoming_transaction_count: 0,
           token_transfer_count: 0,
+          token_incoming_transfer_count: 0,
           gas_usage_count: 0,
           validation_count: 0,
           crc_total_worth: 0
@@ -125,7 +131,15 @@ defmodule BlockScoutWeb.AddressController do
     end)
 
     Task.start_link(fn ->
+      incoming_transaction_count(address)
+    end)
+
+    Task.start_link(fn ->
       token_transfers_count(address)
+    end)
+
+    Task.start_link(fn ->
+      token_incoming_transfers_count(address)
     end)
 
     Task.start_link(fn ->
@@ -156,8 +170,16 @@ defmodule BlockScoutWeb.AddressController do
     AddressTransactionsCounter.fetch(address)
   end
 
+  def incoming_transaction_count(address) do
+    AddressIncomingTransactionsCounter.fetch(address)
+  end
+
   def token_transfers_count(address) do
     AddressTokenTransfersCounter.fetch(address)
+  end
+
+  def token_incoming_transfers_count(address) do
+    AddressTokenIncomingTransfersCounter.fetch(address)
   end
 
   def gas_usage_count(address) do
