@@ -1,6 +1,6 @@
 defmodule Explorer.Counters.AddressTransactionsCounter do
   @moduledoc """
-  Caches Address transactions counter.
+  Caches Address outgoing transactions counter.
   """
   use GenServer
 

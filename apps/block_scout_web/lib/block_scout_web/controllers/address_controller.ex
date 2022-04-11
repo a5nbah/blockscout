@@ -4,7 +4,7 @@ defmodule BlockScoutWeb.AddressController do
   import BlockScoutWeb.Chain, only: [paging_options: 1, next_page_params: 3, split_list_by_page: 1]
 
   alias BlockScoutWeb.{AccessHelpers, AddressView, Controller, CurrencyHelpers}
-  alias Explorer.Counters.{AddressTokenTransfersCounter, AddressTransactionsCounter, AddressTransactionsGasUsageCounter}
+  alias Explorer.Counters.{AddressTokenTransfersCounter, AddressTokenIncomingTransfersCounter, AddressTransactionsCounter, AddressIncomingTransactionsCounter, AddressTransactionsGasUsageCounter}
   alias Explorer.{Chain, CustomContractsHelpers, Market}
   alias Explorer.ExchangeRates.Token
   alias Phoenix.View
@@ -84,27 +84,35 @@ defmodule BlockScoutWeb.AddressController do
   def address_counters(conn, %{"id" => address_hash_string}) do
     with {:ok, address_hash} <- Chain.string_to_address_hash(address_hash_string),
          {:ok, address} <- Chain.hash_to_address(address_hash) do
-      {validation_count, crc_total_worth} = address_counters(address)
-
-      transactions_from_db = address.transactions_count || 0
-      token_transfers_from_db = address.token_transfers_count || 0
-      address_gas_usage_from_db = address.gas_used || 0
+      {
+        validation_count,
+        crc_total_worth,
+        transaction_count,
+        incoming_transaction_count,
+        token_transfers_count,
+        token_incoming_transfers_count,
+        gas_usage_count
+      } = address_counters(address)
 
       json(conn, %{
-        transaction_count: transactions_from_db,
-        token_transfer_count: token_transfers_from_db,
-        gas_usage_count: address_gas_usage_from_db,
         validation_count: validation_count,
-        crc_total_worth: crc_total_worth
+        crc_total_worth: crc_total_worth,
+        transaction_count: transaction_count,
+        incoming_transaction_count: incoming_transaction_count,
+        token_transfer_count: token_transfers_count,
+        token_incoming_transfer_count: token_incoming_transfers_count,
+        gas_usage_count: gas_usage_count
       })
     else
       _ ->
         json(conn, %{
-          transaction_count: 0,
-          token_transfer_count: 0,
-          gas_usage_count: 0,
           validation_count: 0,
-          crc_total_worth: 0
+          crc_total_worth: 0,
+          transaction_count: 0,
+          incoming_transaction_count: 0,
+          token_transfer_count: 0,
+          token_incoming_transfer_count: 0,
+          gas_usage_count: 0
         })
     end
   end
@@ -120,21 +128,39 @@ defmodule BlockScoutWeb.AddressController do
         crc_total_worth(address)
       end)
 
-    Task.start_link(fn ->
-      transaction_count(address)
-    end)
+    transaction_count_task =
+      Task.async(fn ->
+        transaction_count(address)
+      end)
 
-    Task.start_link(fn ->
-      token_transfers_count(address)
-    end)
+    incoming_transaction_count_task =
+      Task.async(fn ->
+        incoming_transaction_count(address)
+      end)
 
-    Task.start_link(fn ->
-      gas_usage_count(address)
-    end)
+    token_transfers_count_task =
+      Task.async(fn ->
+        token_transfers_count(address)
+      end)
+
+    token_incoming_transfers_count_task =
+      Task.async(fn ->
+        token_incoming_transfers_count(address)
+      end)
+
+    gas_usage_count_task =
+      Task.async(fn ->
+        gas_usage_count(address)
+      end)
 
     [
       validation_count_task,
-      crc_total_worth_task
+      crc_total_worth_task,
+      transaction_count_task,
+      incoming_transaction_count_task,
+      token_transfers_count_task,
+      token_incoming_transfers_count_task,
+      gas_usage_count_task
     ]
     |> Task.yield_many(:infinity)
     |> Enum.map(fn {_task, res} ->
@@ -156,8 +182,16 @@ defmodule BlockScoutWeb.AddressController do
     AddressTransactionsCounter.fetch(address)
   end
 
+  def incoming_transaction_count(address) do
+    AddressIncomingTransactionsCounter.fetch(address)
+  end
+
   def token_transfers_count(address) do
     AddressTokenTransfersCounter.fetch(address)
+  end
+
+  def token_incoming_transfers_count(address) do
+    AddressTokenIncomingTransfersCounter.fetch(address)
   end
 
   def gas_usage_count(address) do
