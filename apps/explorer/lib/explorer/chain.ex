@@ -938,7 +938,7 @@ defmodule Explorer.Chain do
     Repo.aggregate(to_address_query, :count, :hash, timeout: :infinity)
   end
 
-  @spec address_to_incoming_transaction_gas_usage(Hash.Address.t()) :: Decimal.t() | nil
+  @spec address_to_incoming_transaction_gas_usage(Hash.Address.t()) :: Decimal.t()
   def address_to_incoming_transaction_gas_usage(address_hash) do
     to_address_query =
       from(
@@ -946,10 +946,10 @@ defmodule Explorer.Chain do
         where: transaction.to_address_hash == ^address_hash
       )
 
-    Repo.aggregate(to_address_query, :sum, :gas_used, timeout: :infinity)
+    Repo.aggregate(to_address_query, :sum, :gas_used, timeout: :infinity) || Decimal.new(0)
   end
 
-  @spec address_to_outcoming_transaction_gas_usage(Hash.Address.t()) :: Decimal.t() | nil
+  @spec address_to_outcoming_transaction_gas_usage(Hash.Address.t()) :: Decimal.t()
   def address_to_outcoming_transaction_gas_usage(address_hash) do
     to_address_query =
       from(
@@ -957,7 +957,7 @@ defmodule Explorer.Chain do
         where: transaction.from_address_hash == ^address_hash
       )
 
-    Repo.aggregate(to_address_query, :sum, :gas_used, timeout: :infinity)
+    Repo.aggregate(to_address_query, :sum, :gas_used, timeout: :infinity) || Decimal.new(0)
   end
 
   @spec max_incoming_transactions_count() :: non_neg_integer()
@@ -2530,27 +2530,32 @@ defmodule Explorer.Chain do
     query =
       from(
         token_transfer in TokenTransfer,
-        where: token_transfer.to_address_hash == ^address.hash,
-        or_where: token_transfer.from_address_hash == ^address.hash
+        where: token_transfer.from_address_hash == ^address.hash
       )
 
     Repo.aggregate(query, :count, timeout: :infinity)
   end
 
-  @spec address_to_gas_usage_count(Address.t()) :: Decimal.t() | nil
+  @spec address_to_token_incoming_transfer_count(Address.t()) :: non_neg_integer()
+  def address_to_token_incoming_transfer_count(address) do
+    query =
+      from(
+        token_transfer in TokenTransfer,
+        where: token_transfer.to_address_hash == ^address.hash
+      )
+
+    Repo.aggregate(query, :count, timeout: :infinity)
+  end
+
+  @spec address_to_gas_usage_count(Address.t()) :: Decimal.t()
   def address_to_gas_usage_count(address) do
     if contract?(address) do
       incoming_transaction_gas_usage = address_to_incoming_transaction_gas_usage(address.hash)
 
-      cond do
-        !incoming_transaction_gas_usage ->
-          address_to_outcoming_transaction_gas_usage(address.hash)
-
-        Decimal.cmp(incoming_transaction_gas_usage, 0) == :eq ->
-          address_to_outcoming_transaction_gas_usage(address.hash)
-
-        true ->
-          incoming_transaction_gas_usage
+      if Decimal.cmp(incoming_transaction_gas_usage, 0) == :eq do
+        address_to_outcoming_transaction_gas_usage(address.hash)
+      else
+        incoming_transaction_gas_usage
       end
     else
       address_to_outcoming_transaction_gas_usage(address.hash)

@@ -106,7 +106,15 @@ config :explorer, Explorer.Counters.AddressTransactionsCounter,
   enabled: true,
   enable_consolidation: true
 
+config :explorer, Explorer.Counters.AddressIncomingTransactionsCounter,
+  enabled: true,
+  enable_consolidation: true
+
 config :explorer, Explorer.Counters.AddressTokenTransfersCounter,
+  enabled: true,
+  enable_consolidation: true
+
+config :explorer, Explorer.Counters.AddressTokenIncomingTransfersCounter,
   enabled: true,
   enable_consolidation: true
 

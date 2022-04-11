@@ -1,13 +1,13 @@
-defmodule Explorer.Counters.AddressTokenTransfersCounter do
+defmodule Explorer.Counters.AddressIncomingTransactionsCounter do
   @moduledoc """
-  Caches Address token outgoing transfers counter.
+  Caches Address incoming transactions counter.
   """
   use GenServer
 
   alias Ecto.Changeset
   alias Explorer.{Chain, Repo}
 
-  @cache_name :address_token_transfers_counter
+  @cache_name :address_incoming_transactions_counter
   @last_update_key "last_update"
 
   @ets_opts [
@@ -59,7 +59,7 @@ defmodule Explorer.Counters.AddressTokenTransfersCounter do
   def cache_name, do: @cache_name
 
   defp cache_expired?(address) do
-    cache_period = address_token_transfers_counter_cache_period()
+    cache_period = address_incoming_transactions_counter_cache_period()
     address_hash_string = to_string(address.hash)
     updated_at = fetch_from_cache("hash_#{address_hash_string}_#{@last_update_key}")
 
@@ -73,7 +73,7 @@ defmodule Explorer.Counters.AddressTokenTransfersCounter do
   defp update_cache(address) do
     address_hash_string = to_string(address.hash)
     put_into_cache("hash_#{address_hash_string}_#{@last_update_key}", current_time())
-    new_data = Chain.address_to_token_transfer_count(address)
+    new_data = Chain.address_to_incoming_transaction_count(address.hash)
     put_into_cache("hash_#{address_hash_string}", new_data)
     put_into_db(address, new_data)
   end
@@ -106,8 +106,8 @@ defmodule Explorer.Counters.AddressTokenTransfersCounter do
 
   def enable_consolidation?, do: @enable_consolidation
 
-  defp address_token_transfers_counter_cache_period do
-    case Integer.parse(System.get_env("ADDRESS_TOKEN_TRANSFERS_COUNTER_CACHE_PERIOD", "")) do
+  defp address_incoming_transactions_counter_cache_period do
+    case Integer.parse(System.get_env("ADDRESS_TRANSACTIONS_COUNTER_CACHE_PERIOD", "")) do
       {secs, ""} -> :timer.seconds(secs)
       _ -> :timer.hours(1)
     end
@@ -115,7 +115,7 @@ defmodule Explorer.Counters.AddressTokenTransfersCounter do
 
   defp put_into_db(address, value) do
     address
-    |> Changeset.change(%{token_transfers_count: value})
+    |> Changeset.change(%{incoming_transactions_count: value})
     |> Repo.update()
   end
 end

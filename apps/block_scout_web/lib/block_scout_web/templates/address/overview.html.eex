@@ -210,10 +210,24 @@
                     <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transactions...") %>
                   <% end %>
                 </a>
+                <a href="#txs" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="incoming-transaction-count">
+                  <%= if @address.incoming_transactions_count do %>
+                    <%= Number.Delimit.number_to_delimited(@address.incoming_transactions_count, precision: 0) %> <%= gettext("Incoming transactions") %>
+                  <% else %>
+                    <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transactions...") %>
+                  <% end %>
+                </a>
               <% else %>
                 <a href="<%= AccessHelpers.get_path(@conn, :address_transaction_path, :index, @address.hash)%>#txs" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="transaction-count">
-                  <%= if @address.token_transfers_count do %>
+                  <%= if @address.transactions_count do %>
                     <%= Number.Delimit.number_to_delimited(@address.transactions_count, precision: 0) %> <%= gettext("Outgoing Transactions") %>
+                  <% else %>
+                    <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transactions...") %>
+                  <% end %>
+                </a>
+                <a href="<%= AccessHelpers.get_path(@conn, :address_transaction_path, :index, @address.hash)%>#txs" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="incoming-transaction-count">
+                  <%= if @address.incoming_transactions_count do %>
+                    <%= Number.Delimit.number_to_delimited(@address.incoming_transactions_count, precision: 0) %> <%= gettext("Incoming transactions") %>
                   <% else %>
                     <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transactions...") %>
                   <% end %>
@@ -237,10 +251,24 @@
                     <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transfers...") %>
                   <% end %>
                 </a>
+                <a href="#transfers" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="incoming-transfer-count">
+                  <%= if @address.token_incoming_transfers_count do %>
+                    <%= Number.Delimit.number_to_delimited(@address.token_incoming_transfers_count, precision: 0) %> <%= gettext("Incoming transfers") %>
+                  <% else %>
+                    <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transfers...") %>
+                  <% end %>
+                </a>
               <% else %>
                 <a href="<%= AccessHelpers.get_path(@conn, :address_token_transfers_path, :index, @address.hash)%>#transfers" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="transfer-count">
                   <%= if @address.token_transfers_count do %>
                     <%= Number.Delimit.number_to_delimited(@address.token_transfers_count, precision: 0) %> <%= gettext("Transfers") %>
+                  <% else %>
+                    <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transfers...") %>
+                  <% end %>
+                </a>
+                <a href="<%= AccessHelpers.get_path(@conn, :address_token_transfers_path, :index, @address.hash)%>#transfers" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="incoming-transfer-count">
+                  <%= if @address.token_incoming_transfers_count do %>
+                    <%= Number.Delimit.number_to_delimited(@address.token_incoming_transfers_count, precision: 0) %> <%= gettext("Incoming transfers") %>
                   <% else %>
                     <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transfers...") %>
                   <% end %>
