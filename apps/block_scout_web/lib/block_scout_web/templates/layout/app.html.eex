@@ -64,6 +64,7 @@
       }
       window.onload = applyDarkMode()
     </script>
+
     <script defer data-cfasync="false">
       if (localStorage.getItem("current-color-mode") === "dark") {
         document.getElementById("top-navbar").style.backgroundColor = "#282945";
@@ -279,6 +280,7 @@
         render BlockScoutWeb.CommonComponentsView, "_modal_status.html", status: status
       end
     %>
+    <%= render BlockScoutWeb.CommonComponentsView, "_faucet.html", assigns %>
     <%= render_existing(@view_module, "scripts.html", assigns) %>
     <%= if @view_module == Elixir.BlockScoutWeb.ChainView do %>
       <script defer data-cfasync="false" src="<%= static_path(@conn, "/js/chain.js") %>"></script>
@@ -286,5 +288,6 @@
       <script defer data-cfasync="false" src="<%= static_path(@conn, "/js/token-transfers-toggle.js") %>"></script>
     <% end %>
     <script defer src="<%= static_path(@conn, "/js/autocomplete.js") %>"></script>
+    <script defer src="<%= static_path(@conn, "/js/faucet.js") %>"></script>
   </body>
 </html>

@@ -1,5 +1,6 @@
 <% staking_enabled_in_menu = Application.get_env(:block_scout_web, BlockScoutWeb.Chain)[:staking_enabled_in_menu] %>
 <% apps_menu = Application.get_env(:block_scout_web, :apps_menu) %>
+
 <nav class="navbar navbar-dark navbar-expand-lg navbar-primary" data-selector="navbar" id="top-navbar">
   <div class="container-fluid navbar-container">
     <%= link to: webapp_url(@conn), class: "navbar-brand", "data-test": "header_logo" do %>
@@ -173,6 +174,14 @@
             </div>
           </li>
         <% end %>
+        <!-- Faucet TODO if testnet-->
+        <li class="nav-item">
+          <a href="#" class="nav-link topnav-nav-link" id="faucetButton" role="button" data-toggle="modal" data-target="#faucetModal">
+            <span>
+              <%= gettext("Faucet") %>
+            </span>
+          </a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link topnav-nav-link active-icon" href="/" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="nav-link-icon">
