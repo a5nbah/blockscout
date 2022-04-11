@@ -2837,6 +2837,11 @@ msgid "Incoming transfers"
 msgstr ""
 
 #, elixir-format
+#: lib/block_scout_web/templates/address/overview.html.eex:256 lib/block_scout_web/templates/address/overview.html.eex:271
+msgid "Outcoming transfers"
+msgstr ""
+
+#, elixir-format
 #: lib/block_scout_web/templates/api_docs/_action_tile.html.eex:40
 #: lib/block_scout_web/templates/api_docs/_eth_rpc_item.html.eex:47
 msgid "Try it out"

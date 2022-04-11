@@ -261,7 +261,7 @@
               <% else %>
                 <a href="<%= AccessHelpers.get_path(@conn, :address_token_transfers_path, :index, @address.hash)%>#transfers" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="transfer-count">
                   <%= if @address.token_transfers_count do %>
-                    <%= Number.Delimit.number_to_delimited(@address.token_transfers_count, precision: 0) %> <%= gettext("Transfers") %>
+                    <%= Number.Delimit.number_to_delimited(@address.token_transfers_count, precision: 0) %> <%= gettext("Outgoing Transfers") %>
                   <% else %>
                     <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transfers...") %>
                   <% end %>

@@ -2806,7 +2806,7 @@ msgstr ""
 #, elixir-format
 #: lib/block_scout_web/templates/address/overview.html.eex:208
 #: lib/block_scout_web/templates/address/overview.html.eex:216
-msgid "Outgoing Transactions"
+msgid "Outgoing transactions"
 msgstr ""
 
 #, elixir-format
