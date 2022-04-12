@@ -437,7 +437,7 @@ msgstr ""
 #, elixir-format
 #: lib/block_scout_web/templates/layout/_footer.html.eex:22
 msgid "Blockscout is a tool for inspecting and analyzing EVM based blockchains. Blockchain explorer for Ethereum Networks."
-msgstr ""
+msgstr "AiaxScan is a Block Explorer and Analytics Platform for Aiax Network."
 
 #, elixir-format
 #: lib/block_scout_web/templates/stakes/_stakes_top.html.eex:45
@@ -1205,7 +1205,7 @@ msgid "Forked Blocks (Reorgs)"
 msgstr ""
 
 #, elixir-format
-#: lib/block_scout_web/templates/layout/_footer.html.eex:42
+#:
 msgid "Forum"
 msgstr ""
 
@@ -3375,6 +3375,21 @@ msgid "Error in internal transactions"
 msgstr ""
 
 #, elixir-format
-#: lib/block_scout_web/templates/layout/_footer.html.eex:195
+#: lib/block_scout_web/templates/layout/_topnav.html.eex:195
 msgid "Faucet"
+msgstr ""
+
+#, elixir-format
+#: lib/block_scout_web/templates/layout/_topnav.html.eex:188
+msgid "AIAX Exchange"
+msgstr ""
+
+#, elixir-format
+#: lib/block_scout_web/templates/layout/_footer.html.eex:41
+msgid "Discord"
+msgstr ""
+
+#, elixir-format
+#: lib/block_scout_web/templates/layout/_footer.html.eex:42
+msgid "Reddit"
 msgstr ""

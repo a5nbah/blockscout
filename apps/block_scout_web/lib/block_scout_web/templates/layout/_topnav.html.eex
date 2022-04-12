@@ -182,6 +182,13 @@
             </span>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="https://aiax.exchange" class="nav-link topnav-nav-link" id="bridgeButton" role="button">
+            <span>
+              <%= gettext("AIAX Exchange") %>
+            </span>
+          </a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link topnav-nav-link active-icon" href="/" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="nav-link-icon">
