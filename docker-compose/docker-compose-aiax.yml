@@ -19,6 +19,11 @@ services:
       dockerfile: ./docker/Dockerfile
       args:
         COIN: "AXX"
+        JSON_RPC: "https://test-rpc.aiax.network"
+        NETWORK_PATH: "/"
+        COIN_NAME: "Aiax"
+        SUBNETWORK: "AIAX Testnet"
+        CHAIN_ID: "612938472"
     restart: unless-stopped
     command: 'mix do ecto.create, ecto.migrate, phx.server'
     env_file:
