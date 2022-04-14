@@ -88,6 +88,6 @@ defmodule BlockScoutWeb.AddressTokenBalanceView do
   end
 
   def address_tokens_usd_sum_cache(address, token_balances) do
-    AddressTokenUsdSum.fetch(address, token_balances)
+    AddressTokenUsdSum.fetch(address, token_balances, true)
   end
 end

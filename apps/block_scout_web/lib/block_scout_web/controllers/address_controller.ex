@@ -54,7 +54,8 @@ defmodule BlockScoutWeb.AddressController do
           index: items_count + index,
           exchange_rate: exchange_rate,
           total_supply: total_supply,
-          tx_count: tx_count
+          tx_count: tx_count,
+          in_tx_count: AddressIncomingTransactionsCounter.fetch(address)
         )
       end)
 
@@ -179,19 +180,19 @@ defmodule BlockScoutWeb.AddressController do
   end
 
   def transaction_count(address) do
-    AddressTransactionsCounter.fetch(address)
+    AddressTransactionsCounter.fetch(address, true)
   end
 
   def incoming_transaction_count(address) do
-    AddressIncomingTransactionsCounter.fetch(address)
+    AddressIncomingTransactionsCounter.fetch(address, true)
   end
 
   def token_transfers_count(address) do
-    AddressTokenTransfersCounter.fetch(address)
+    AddressTokenTransfersCounter.fetch(address, true)
   end
 
   def token_incoming_transfers_count(address) do
-    AddressTokenIncomingTransfersCounter.fetch(address)
+    AddressTokenIncomingTransfersCounter.fetch(address, true)
   end
 
   def gas_usage_count(address) do
