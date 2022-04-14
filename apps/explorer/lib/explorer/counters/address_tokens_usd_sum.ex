@@ -46,8 +46,8 @@ defmodule Explorer.Counters.AddressTokenUsdSum do
     {:noreply, state}
   end
 
-  def fetch(address_hash_string, token_balances) do
-    if cache_expired?(address_hash_string) do
+  def fetch(address_hash_string, token_balances, force \\ false) do
+    if cache_expired?(address_hash_string) or force do
       Task.start_link(fn ->
         update_cache(address_hash_string, token_balances)
       end)

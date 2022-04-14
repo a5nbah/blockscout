@@ -47,8 +47,8 @@ defmodule Explorer.Counters.AddressIncomingTransactionsCounter do
     {:noreply, state}
   end
 
-  def fetch(address) do
-    if cache_expired?(address) do
+  def fetch(address, force \\ false) do
+    if cache_expired?(address) or force do
       update_cache(address)
     end
 
