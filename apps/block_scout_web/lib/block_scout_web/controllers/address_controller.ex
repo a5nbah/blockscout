@@ -54,7 +54,8 @@ defmodule BlockScoutWeb.AddressController do
           index: items_count + index,
           exchange_rate: exchange_rate,
           total_supply: total_supply,
-          tx_count: tx_count
+          tx_count: tx_count,
+          in_tx_count: AddressIncomingTransactionsCounter.fetch(address)
         )
       end)
 

@@ -35,9 +35,9 @@
 				</div>
 			</th>
 		  <% end %>
-	      <th class="stakes-table-th">
+	      <th class="stakes-table-th" colspan="2">
 			<div class="stakes-table-th-content">
-			Txn Count
+			Transaction Count
 			</div>
 	      </th>
 	    </tr>

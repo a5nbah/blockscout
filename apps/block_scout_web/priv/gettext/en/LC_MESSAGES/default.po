@@ -2816,7 +2816,12 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/address/_tile.html.eex:31
-msgid "Transactions sent"
+msgid "Txn sent"
+msgstr ""
+
+#, elixir-format
+#: lib/block_scout_web/templates/address/_tile.html.eex:38
+msgid "Txn received"
 msgstr ""
 
 #, elixir-format
