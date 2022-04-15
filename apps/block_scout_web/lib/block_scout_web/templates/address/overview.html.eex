@@ -203,14 +203,14 @@
             </dt>
             <dd class="col-sm-8 col-md-8 col-lg-9" data-test="address_transaction_count">
               <%= if @conn.request_path |> String.contains?("/transactions") do %>
-                <a href="#txs" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="transaction-count">
+                <a href="?filter=from#txs" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="transaction-count">
                   <%= if @address.transactions_count do %>
                     <%= Number.Delimit.number_to_delimited(@address.transactions_count, precision: 0) %> <%= gettext("Outgoing Transactions") %>
                   <% else %>
                     <%= render BlockScoutWeb.CommonComponentsView, "_loading_spinner.html", loading_text: gettext("Fetching transactions...") %>
                   <% end %>
                 </a>
-                <a href="#txs" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="incoming-transaction-count">
+                <a href="?filter=to#txs" class="page-link bs-label large btn-no-border-link-to-tems" data-selector="incoming-transaction-count">
                   <%= if @address.incoming_transactions_count do %>
                     <%= Number.Delimit.number_to_delimited(@address.incoming_transactions_count, precision: 0) %> <%= gettext("Incoming transactions") %>
                   <% else %>
