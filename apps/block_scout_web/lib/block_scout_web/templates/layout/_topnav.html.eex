@@ -183,9 +183,9 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="https://aiax.exchange" class="nav-link topnav-nav-link" id="bridgeButton" role="button">
+          <a href="https://bridge.aiax.network" class="nav-link topnav-nav-link" id="bridgeButton" role="button">
             <span>
-              <%= gettext("AIAX Exchange") %>
+              <%= gettext("AIAX Bridge") %>
             </span>
           </a>
         </li>

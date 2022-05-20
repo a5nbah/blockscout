@@ -3381,7 +3381,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/layout/_footer.html.eex:188
-msgid "AIAX Exchange"
+msgid "AIAX Bridge"
 msgstr ""
 
 #, elixir-format
