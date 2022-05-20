@@ -23,7 +23,7 @@ services:
         NETWORK_PATH: "/"
         COIN_NAME: "Aiax"
         SUBNETWORK: "AIAX Testnet"
-        CHAIN_ID: "612938472"
+        CHAIN_ID: "568297332"
     restart: unless-stopped
     command: 'mix do ecto.create, ecto.migrate, phx.server'
     env_file:
