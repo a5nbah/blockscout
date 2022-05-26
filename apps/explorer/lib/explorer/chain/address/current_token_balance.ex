@@ -162,7 +162,6 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
     from(
       ctb in __MODULE__,
       where: ctb.address_hash == ^address_hash,
-      where: ctb.value > 0,
       left_join: bt in BridgedToken,
       on: ctb.token_contract_address_hash == bt.home_token_contract_address_hash,
       left_join: t in Token,

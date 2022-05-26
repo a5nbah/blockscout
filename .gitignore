@@ -47,3 +47,4 @@ screenshots/
 /docker-compose/tmp
 /apps/block_scout_web/priv/static/
 /.idea/
+/.elixir_ls/
