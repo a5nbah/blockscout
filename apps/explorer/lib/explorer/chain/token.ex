@@ -129,4 +129,19 @@ defmodule Explorer.Chain.Token do
       where: token.cataloged == true and token.updated_at <= ^some_time_ago_date
     )
   end
+
+  def fetch_tokens() do
+    from(
+      token in __MODULE__,
+      select: token,
+      order_by: [desc: token.updated_at]
+    )
+  end
+
+  def fetch_token_addresses() do
+    from(
+      token in __MODULE__,
+      select: token.contract_address_hash
+    )
+  end
 end
