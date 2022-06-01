@@ -10,6 +10,7 @@ defmodule BlockScoutWeb.AddressTokenController do
   alias Indexer.Fetcher.CoinBalanceOnDemand
   alias Phoenix.View
 
+  @decimal_zero Decimal.new(0)
   def index(conn, %{"address_id" => address_hash_string, "type" => "JSON"} = params) do
     with {:ok, address_hash} <- Chain.string_to_address_hash(address_hash_string),
          {:ok, address} <- Chain.hash_to_address(address_hash, [], false),
@@ -17,6 +18,7 @@ defmodule BlockScoutWeb.AddressTokenController do
       token_balances_plus_one =
         address_hash
         |> Chain.fetch_last_token_balances(paging_options(params))
+        |> Enum.filter(fn {balance, _, _} -> Decimal.cmp(balance.value, @decimal_zero) != :eq end)
         |> Market.add_price()
 
       {tokens, next_page} = split_list_by_page(token_balances_plus_one)

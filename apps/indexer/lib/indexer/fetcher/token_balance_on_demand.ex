@@ -46,6 +46,48 @@ defmodule Indexer.Fetcher.TokenBalanceOnDemand do
     :ok
   end
 
+  @spec check_and_update_unfetched_token_balances(Hash.t(), [%{token_address: Hash.t(), token_type: String.t()}]) :: :ok
+  def check_and_update_unfetched_token_balances(address_hash, tokens) do
+    latest_block_number = latest_block_number()
+    token_balances_update_params =
+      tokens
+      |> Enum.map(fn token ->
+        current_token_balances_to_fetch = [
+          %{
+            token_contract_address_hash: "0x" <> Base.encode16(token.token_address.bytes),
+            address_hash: "0x" <> Base.encode16(address_hash.bytes),
+            block_number: latest_block_number
+          }
+        ]
+
+        balance_response = BalanceReader.get_balances_of(current_token_balances_to_fetch)
+        updated_balance = balance_response[:ok]
+
+        if updated_balance do
+          %{}
+          |> Map.put(:address_hash, address_hash)
+          |> Map.put(:token_contract_address_hash, token.token_address)
+          |> Map.put(:token_type, token.token_type)
+          |> Map.put(:block_number, latest_block_number)
+          |> Map.put(:value, Decimal.new(updated_balance))
+          |> Map.put(:value_fetched_at, DateTime.utc_now())
+        else
+          nil
+        end
+      end)
+
+    filtered_token_balances_update_params =
+      token_balances_update_params
+      |> Enum.filter(&(!is_nil(&1)))
+
+    Chain.import(%{
+      address_current_token_balances: %{
+        params: filtered_token_balances_update_params
+      },
+      broadcast: :on_demand
+    })
+  end
+
   defp fetch_and_update(block_number, address_hash, stale_current_token_balances) do
     current_token_balances_update_params =
       stale_current_token_balances

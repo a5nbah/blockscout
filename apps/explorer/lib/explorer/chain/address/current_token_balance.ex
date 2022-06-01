@@ -258,4 +258,22 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
       where: tb.value > 0
     )
   end
+
+  @doc """
+  Builds an `t:Ecto.Query.t/0` to fetch token addresses that are not on the balance of the specified address
+  """
+  def token_addresses_not_in_balance(address_hash) do
+    sub = from(
+      ctb in __MODULE__,
+      where: ctb.address_hash == ^address_hash,
+      left_join: t in Token,
+      on: ctb.token_contract_address_hash == t.contract_address_hash,
+      select: {ctb.token_contract_address_hash}
+    )
+    from(
+      t in Token,
+      where: t.contract_address_hash not in subquery(sub),
+      select: {t.contract_address_hash, t.type}
+    )
+  end
 end

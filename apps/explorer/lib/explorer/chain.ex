@@ -5795,6 +5795,12 @@ defmodule Explorer.Chain do
     |> Repo.all()
   end
 
+  @spec fetch_tokens_not_in_address(Hash.Address.t()) :: []
+  def fetch_tokens_not_in_address(address_hash) do
+    CurrentTokenBalance.token_addresses_not_in_balance(address_hash)
+    |> Repo.all()
+  end
+
   @spec erc721_token_instance_from_token_id_and_token_address(binary(), Hash.Address.t()) ::
           {:ok, TokenTransfer.t()} | {:error, :not_found}
   def erc721_token_instance_from_token_id_and_token_address(token_id, token_contract_address) do
